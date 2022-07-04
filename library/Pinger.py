@@ -6,7 +6,7 @@ class Pinger:
     def __init__(self, hostname):
         self._host = hostname
         self._ping_counter = 0
-        self._response = {}
+        # response = {}
         self._command = ['ping', '-c', '1', self._host]
 
     def ping(self):
@@ -17,15 +17,19 @@ class Pinger:
 
             if result.returncode != 0:
                 print(f"ping: Unreachable host: {self._host}")
-                return -1
+                response = {'host': self._host,
+                            'time': -1,
+                            'counter': self._ping_counter,
+                            'reachable': False}
+                return json.dumps(response)
 
             self._ping_counter += 1
 
-            self._response['host'] = self._host
-            self._response['time'] = round((toc - tic) * 1000, 2)
-            self._response['counter'] = self._ping_counter
-
-            return json.dumps(self._response)
+            response = {'host': self._host,
+                        'time': round((toc - tic) * 1000, 2),
+                        'counter': self._ping_counter,
+                        'reachable': True}
+            return json.dumps(response)
 
         except Exception as e:
             print(f"ping: {e}")

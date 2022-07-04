@@ -10,9 +10,13 @@ all_time = 0
 
 while True:
     resp = json.loads(p.ping())
-    all_time += resp['time']
-    if resp['counter'] % 50 == 0:
+    if resp['reachable']:
+        all_time += resp['time']
+        if resp['counter'] % 10 == 0:
+            os.system('clear')
+            print(f"avg_time: {round((all_time / resp['counter']), 2)} ms")
+            time.sleep(1)
+    else:
         os.system('clear')
-        print(f"avg_time: {round((all_time / resp['counter']), 2)} ms")
-        time.sleep(2)
-
+        print(f"Unreachable!")
+        time.sleep(3)
