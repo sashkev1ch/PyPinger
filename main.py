@@ -1,4 +1,3 @@
-from subprocess import call, run
 from library.Pinger import Pinger
 import os, time, json
 

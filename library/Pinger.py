@@ -16,7 +16,7 @@ class Pinger:
             toc = time.perf_counter()
 
             if result.returncode != 0:
-                print(f"ping: Unreachable host: {self._host}")
+                # print(f"ping: Unreachable host: {self._host}")
                 response = {'host': self._host,
                             'time': -1,
                             'counter': self._ping_counter,
