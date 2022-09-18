@@ -1,5 +1,7 @@
+import json
+import os
+import time
 from library.Pinger import Pinger
-import os, time, json
 
 p = Pinger(hostname='8.8.8.8')
 

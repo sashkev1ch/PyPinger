@@ -1,5 +1,7 @@
-from subprocess import call, run
-import time, json
+import json
+import time
+from subprocess import run
+from library.decorators import timer_decorator
 
 
 class Pinger:
@@ -9,13 +11,15 @@ class Pinger:
         # response = {}
         self._command = ['ping', '-c', '1', self._host]
 
+    @timer_decorator
+    def make_ping(self):
+        res = (run(self._command, capture_output=True))
+        return res
+
     def ping(self):
         try:
-            tic = time.perf_counter()
-            result = (run(self._command, capture_output=True))
-            toc = time.perf_counter()
-
-            if result.returncode != 0:
+            result = self.make_ping()
+            if result['result'].returncode != 0:
                 # print(f"ping: Unreachable host: {self._host}")
                 response = {'host': self._host,
                             'time': -1,
@@ -26,7 +30,7 @@ class Pinger:
             self._ping_counter += 1
 
             response = {'host': self._host,
-                        'time': round((toc - tic) * 1000, 2),
+                        'time': result['run_time'],
                         'counter': self._ping_counter,
                         'reachable': True}
             return json.dumps(response)
@@ -34,4 +38,3 @@ class Pinger:
         except Exception as e:
             print(f"ping: {e}")
             return -1
-
